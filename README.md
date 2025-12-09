@@ -4,75 +4,87 @@
 
 It leverages a powerful stack of local AI models and open-source libraries to ensure high performance, privacy, and control, minimizing reliance on expensive external APIs.
 
-![Klipto Screenshot](docs/screenshot.png)
+<p align="center">
+  <img src="docs/screenshot-home.png" alt="Klipto Home" width="800"/>
+</p>
 
-## 🚀 Features
+## ✨ Features
 
-### AI-Powered Processing
-- **Local Audio Transcription**: Uses `faster-whisper` for lightning-fast, accurate speech-to-text processing on your own hardware (CPU/GPU)
-- **Intelligent Scene Detection**: Utilizes `PySceneDetect` to automatically identify scene changes and cuts in the video
-- **Viral Hook Detection**: Analyzes transcripts using LLMs (via OpenRouter/DeepSeek/OpenAI) to find the most engaging "hooks" or highlights
-- **Smart Auto-Cropping**: Uses `YOLOv8` (Ultralytics) to detect subjects (people) and dynamically crop horizontal video to vertical (9:16) while keeping the subject centered
-- **Background Processing**: Robust pipeline orchestration using **Celery** and **Redis**
+### 🤖 AI-Powered Processing
+- **Local Audio Transcription**: Uses `faster-whisper` for lightning-fast, accurate speech-to-text on your own hardware (CPU/GPU)
+- **Intelligent Scene Detection**: Uses `PySceneDetect` to automatically identify scene changes and cuts
+- **Viral Hook Detection**: Analyzes transcripts using LLMs (DeepSeek, GPT-4, Claude, Gemini) to find engaging "hooks"
+- **Smart Auto-Cropping**: Uses `YOLOv8/YOLO11` to detect subjects and dynamically crop to 9:16 while keeping subjects centered
+- **Background Processing**: Robust pipeline using **Celery** and **Redis**
 
-### Modern Web Interface
+### 🎨 Modern Web Interface
 - **Drag & Drop Upload**: Intuitive video upload with preview
-- **Real-time Progress Tracking**: Visual timeline showing each processing stage
-- **Clip Gallery**: Beautiful grid view of generated clips with virality scores
-- **Fullscreen Preview**: Modal player with navigation between clips
+- **Real-time Progress**: Visual timeline showing each processing stage
+- **Clip Gallery**: Beautiful grid with virality scores and fullscreen preview
 - **Settings Dashboard**: Configure AI providers and models through the UI
 - **Dark Mode UI**: Modern glass-morphism design with smooth animations
 
 ## 🛠️ Tech Stack
 
 ### Backend
-- **Framework**: Python 3.10+, FastAPI
-- **Task Queue**: Celery, Redis
-- **Video Processing**: FFmpeg, OpenCV
+| Component | Technology |
+|-----------|------------|
+| Framework | FastAPI 0.115+ |
+| Task Queue | Celery 5.4+ |
+| Cache/Broker | Redis 5.2+ |
+| Video Processing | FFmpeg, OpenCV 4.10+ |
 
 ### AI / ML
-- **Transcription**: `faster-whisper` (CTranslate2)
-- **Vision/Object Detection**: `ultralytics` (YOLOv8 Nano)
-- **Scene Detection**: `PySceneDetect`
-- **LLM Integration**: OpenRouter, OpenAI, Anthropic
+| Component | Technology |
+|-----------|------------|
+| Transcription | faster-whisper 1.1+ (CTranslate2) |
+| Object Detection | Ultralytics 8.3+ (YOLOv8/YOLO11) |
+| Scene Detection | PySceneDetect 0.6.5+ |
+| LLM Integration | OpenAI SDK 1.58+ |
 
 ### Frontend
-- **Framework**: React 18 + TypeScript
-- **Build Tool**: Vite
-- **Styling**: Tailwind CSS 4
-- **Animations**: Framer Motion
-- **Icons**: Lucide React
-- **HTTP Client**: Axios
+| Component | Technology |
+|-----------|------------|
+| Framework | React 18 + TypeScript |
+| Build Tool | Vite 5+ |
+| Styling | Tailwind CSS 4 |
+| Animations | Framer Motion |
+| Icons | Lucide React |
+
+### Supported LLM Providers
+| Provider | Models |
+|----------|--------|
+| **OpenRouter** (recommended) | DeepSeek V3, Claude 3.5, GPT-4o, Gemini 2.0, Llama 3.3 |
+| **OpenAI** | GPT-4o, GPT-4o-mini, o1-preview |
+| **Anthropic** | Claude 3.5 Sonnet |
+| **Google** | Gemini 2.0 Flash |
 
 ## 📁 Project Structure
 
 ```
 klipto/
 ├── klipto/                 # Backend Python package
-│   └── app/
-│       ├── main.py         # FastAPI application
-│       ├── config.py       # Configuration settings
-│       ├── tasks.py        # Celery tasks
-│       ├── modules/        # AI processing modules
-│       │   ├── audio_processor.py    # Whisper transcription
-│       │   ├── vision_analyzer.py    # YOLO detection
-│       │   ├── nlp_analyzer.py       # LLM hook detection
-│       │   ├── clip_selector.py      # Clip scoring
-│       │   └── video_composer.py     # FFmpeg rendering
-│       └── utils/          # Utility functions
+│   ├── app/
+│   │   ├── main.py         # FastAPI application
+│   │   ├── config.py       # Configuration settings
+│   │   ├── tasks.py        # Celery tasks
+│   │   ├── modules/        # AI processing modules
+│   │   │   ├── audio_processor.py    # Whisper transcription
+│   │   │   ├── vision_analyzer.py    # YOLO detection
+│   │   │   ├── nlp_analyzer.py       # LLM hook detection
+│   │   │   ├── clip_selector.py      # Clip scoring
+│   │   │   └── video_composer.py     # FFmpeg rendering
+│   │   └── utils/          # Utility functions
+│   └── .env.example        # Environment template
 ├── frontend/               # React frontend
 │   ├── src/
 │   │   ├── components/     # React components
-│   │   │   ├── ui/         # Button, Card, Progress, Badge
-│   │   │   ├── layout/     # Header, Layout
-│   │   │   ├── upload/     # VideoDropzone
-│   │   │   ├── processing/ # ProcessingStatus
-│   │   │   └── clips/      # ClipCard, ClipGrid
 │   │   ├── pages/          # Page components
-│   │   ├── hooks/          # Custom React hooks
+│   │   ├── hooks/          # Custom hooks
 │   │   ├── lib/            # API client
 │   │   └── types/          # TypeScript types
 │   └── package.json
+├── requirements.txt        # Python dependencies
 ├── uploads/                # Uploaded videos
 ├── outputs/                # Generated clips
 ├── temp/                   # Temporary files
@@ -81,15 +93,15 @@ klipto/
 
 ## 📋 Prerequisites
 
-- Python 3.10 or higher
-- Node.js 18+ and npm
-- `ffmpeg` installed on your system
-- `redis-server` installed and running
-- An API Key for OpenRouter (or OpenAI/Anthropic) for the content analysis step
+- **Python 3.10+**
+- **Node.js 18+** and npm
+- **FFmpeg** installed on your system
+- **Redis** server running
+- **API Key** for your chosen LLM provider
 
-## ⚡ Installation
+## ⚡ Quick Start
 
-### 1. Clone the repository
+### 1. Clone the Repository
 ```bash
 git clone https://github.com/fralapo/Klipto.git
 cd Klipto
@@ -97,16 +109,18 @@ cd Klipto
 
 ### 2. Backend Setup
 ```bash
-# Create a Virtual Environment
+# Create virtual environment
 python3 -m venv venv
-source venv/bin/activate  # On Windows: venv\Scripts\activate
+source venv/bin/activate  # Windows: venv\Scripts\activate
 
-# Install Python Dependencies
+# Install dependencies
 pip install -r requirements.txt
 
-# Ensure you have system dependencies:
-# Ubuntu/Debian: sudo apt install ffmpeg redis-server
-# macOS: brew install ffmpeg redis
+# System dependencies (Ubuntu/Debian)
+sudo apt install ffmpeg redis-server
+
+# macOS
+brew install ffmpeg redis
 ```
 
 ### 3. Frontend Setup
@@ -116,37 +130,26 @@ npm install
 ```
 
 ### 4. Configuration
-Create a `.env` file in the `klipto/` directory:
 
+Copy the example environment file:
+```bash
+cp klipto/.env.example klipto/.env
+```
+
+Edit `klipto/.env` with your settings:
 ```ini
-# .env
-PROJECT_NAME="Klipto"
+# Choose LLM provider: openrouter, openai, anthropic, google
+LLM_PROVIDER=openrouter
+LLM_MODEL=deepseek/deepseek-chat
 
-# Redis
-REDIS_URL=redis://localhost:6379/0
-
-# AI Config - Choose your provider
-LLM_PROVIDER=openrouter  # Options: openrouter, openai, anthropic
-LLM_MODEL=deepseek/deepseek-r1
-
-# API Keys (add the one for your chosen provider)
+# Add your API key
 OPENROUTER_API_KEY=sk-or-your-key-here
-# OPENAI_API_KEY=sk-your-openai-key
-# ANTHROPIC_API_KEY=sk-ant-your-key
 
-# Local Whisper Config
-WHISPER_MODEL=base  # Options: tiny, base, small, medium, large
-USE_LOCAL_WHISPER=true
+# Whisper model: tiny, base, small, medium, large-v3
+WHISPER_MODEL=base
 ```
 
-Create a `.env` file in the `frontend/` directory:
-```ini
-VITE_API_URL=http://localhost:8000
-```
-
-## 🏃 Usage
-
-### Quick Start (Development)
+### 5. Start the Application
 
 **Terminal 1 - Redis:**
 ```bash
@@ -171,59 +174,54 @@ cd frontend
 npm run dev
 ```
 
-Then open your browser to `http://localhost:3000` 🎉
+Open **http://localhost:3000** in your browser 🎉
 
-### Using the Interface
+## 🎯 Usage
 
-1. **Upload a Video**: Drag & drop or click to select a horizontal video file
-2. **Select Clip Count**: Choose how many clips to generate (1-10)
-3. **Click "Genera Clip Virali"**: Start the AI processing pipeline
-4. **Monitor Progress**: Watch real-time updates as each stage completes
-5. **Preview & Download**: View generated clips and download your favorites
+1. **Upload**: Drag & drop or click to select a horizontal video
+2. **Configure**: Choose number of clips to generate (1-10)
+3. **Process**: Click "Generate Viral Clips" and watch real-time progress
+4. **Review**: Preview clips with virality scores
+5. **Download**: Download your favorite clips
 
-### API Endpoints
-
-| Endpoint | Method | Description |
-|----------|--------|-------------|
-| `/` | GET | API status |
-| `/upload` | POST | Upload video and start processing |
-| `/status/{task_id}` | GET | Get task progress and results |
-| `/clips/{filename}` | GET | Stream/download a clip |
-| `/clips/{filename}` | DELETE | Delete a clip |
-| `/tasks` | GET | List all processing tasks |
-| `/settings` | GET | Get current settings |
-| `/settings` | POST | Update settings |
-| `/health` | GET | Health check |
-
-## 🖥️ Screenshots
-
-### Home Page - Upload Interface
-Modern drag & drop interface with video preview and clip count selection.
-
-### Processing View
-Real-time progress tracking with visual timeline of all AI processing stages.
-
-### Results Gallery
-Beautiful grid of generated clips with virality scores, preview on hover, and one-click download.
-
-### Settings Page
-Configure LLM providers, models, API keys, and Whisper settings through the UI.
-
-## 🔧 Configuration Options
-
-### LLM Providers
-- **OpenRouter**: Access to DeepSeek, Claude, GPT, and many more models
-- **OpenAI**: Direct GPT-4 and GPT-3.5 access
-- **Anthropic**: Direct Claude access
+## 🔧 Configuration Reference
 
 ### Whisper Models
 | Model | Speed | Accuracy | VRAM |
 |-------|-------|----------|------|
-| tiny | Fastest | Low | ~1GB |
-| base | Fast | Good | ~1GB |
-| small | Medium | Better | ~2GB |
-| medium | Slow | High | ~5GB |
-| large | Slowest | Best | ~10GB |
+| `tiny` | Fastest | Low | ~1GB |
+| `base` | Fast | Good | ~1GB |
+| `small` | Medium | Better | ~2GB |
+| `medium` | Slow | High | ~5GB |
+| `large-v3` | Slowest | Best | ~10GB |
+
+### LLM Models (via OpenRouter)
+| Model | Best For |
+|-------|----------|
+| `deepseek/deepseek-chat` | Best value, fast |
+| `deepseek/deepseek-reasoner` | Complex reasoning |
+| `anthropic/claude-3.5-sonnet` | High quality |
+| `openai/gpt-4o` | Versatile |
+| `google/gemini-2.0-flash-exp` | Fast, multimodal |
+
+## 📡 API Endpoints
+
+| Endpoint | Method | Description |
+|----------|--------|-------------|
+| `/` | GET | API status |
+| `/upload` | POST | Upload video & start processing |
+| `/status/{task_id}` | GET | Get task progress & results |
+| `/clips/{filename}` | GET | Stream/download a clip |
+| `/clips/{filename}` | DELETE | Delete a clip |
+| `/tasks` | GET | List all tasks |
+| `/settings` | GET/POST | Get/update settings |
+| `/health` | GET | Health check |
+
+## 🐳 Docker (Coming Soon)
+
+```bash
+docker-compose up -d
+```
 
 ## 🤝 Contributing
 
@@ -241,11 +239,14 @@ MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## 🙏 Acknowledgments
 
-- [faster-whisper](https://github.com/guillaumekln/faster-whisper) for blazing fast transcription
-- [Ultralytics](https://github.com/ultralytics/ultralytics) for YOLOv8
-- [PySceneDetect](https://github.com/Breakthrough/PySceneDetect) for scene detection
-- [FFmpeg](https://ffmpeg.org/) for video processing
+- [faster-whisper](https://github.com/SYSTRAN/faster-whisper) - Blazing fast transcription
+- [Ultralytics](https://github.com/ultralytics/ultralytics) - YOLOv8/YOLO11
+- [PySceneDetect](https://github.com/Breakthrough/PySceneDetect) - Scene detection
+- [FFmpeg](https://ffmpeg.org/) - Video processing
+- [DeepSeek](https://deepseek.com/) - Affordable & powerful LLMs
 
 ---
 
-Made with ❤️ by the Klipto team
+<p align="center">
+  Made with ❤️ for content creators
+</p>
