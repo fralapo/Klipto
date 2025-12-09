@@ -1,78 +1,47 @@
 
 import os
 from typing import Dict, Any
-import openai
+from faster_whisper import WhisperModel
 from app.config import settings
 
 class AudioProcessor:
-    """Handles audio transcription using OpenAI API."""
+    """Handles audio transcription using Faster Whisper (Local)."""
 
     def __init__(self):
-        self.api_key = settings.OPENAI_API_KEY
-        if self.api_key:
-            openai.api_key = self.api_key
+        # Use CPU with int8 for the sandbox environment
+        # In production with GPU, use device="cuda", compute_type="float16"
+        self.model_size = settings.WHISPER_MODEL # e.g. "base" or "small"
+        print(f"Loading faster-whisper model: {self.model_size}")
+
+        # Check if CUDA is available, otherwise CPU
+        # For this sandbox, force CPU to avoid errors if GPU libs are missing drivers
+        self.model = WhisperModel(self.model_size, device="cpu", compute_type="int8")
 
     def transcribe(self, audio_path: str) -> Dict[str, Any]:
-        """Transcribes audio file using OpenAI Whisper API."""
+        """Transcribes audio file."""
         if not os.path.exists(audio_path):
             raise FileNotFoundError(f"Audio file not found: {audio_path}")
 
-        # In a real environment, we would call the API.
-        # client = openai.OpenAI(api_key=self.api_key)
-        # with open(audio_path, "rb") as audio_file:
-        #     transcript = client.audio.transcriptions.create(
-        #         model="whisper-1",
-        #         file=audio_file,
-        #         response_format="verbose_json",
-        #         timestamp_granularities=["word", "segment"]
-        #     )
-        # return transcript.to_dict()
+        print(f"Transcribing {audio_path}...")
+        segments, info = self.model.transcribe(audio_path, beam_size=5)
 
-        # Since we might not have a valid key in this sandbox or just for dev purpose:
-        # We need to construct the call.
-        try:
-            client = openai.OpenAI(api_key=self.api_key)
-            with open(audio_path, "rb") as audio_file:
-                # Note: timestamp_granularities requires verbose_json
-                transcript = client.audio.transcriptions.create(
-                    model="whisper-1",
-                    file=audio_file,
-                    response_format="verbose_json",
-                    timestamp_granularities=["word", "segment"]
-                )
+        # faster-whisper returns a generator, we must consume it
+        segment_list = list(segments)
 
-            # The response object needs to be converted to dict to be serializable
-            return {
-                'text': transcript.text,
-                'segments': transcript.segments, # This might need adaptation depending on library version
-                'words': transcript.words if hasattr(transcript, 'words') else [],
-                'language': transcript.language
-            }
-        except Exception as e:
-            print(f"Transcription failed: {str(e)}")
-            # Fallback for testing without valid key if we are in test mode
-            if "Incorrect API key" in str(e) or "dummy" in self.api_key:
-                print("Using mock transcription due to invalid key.")
-                return self._mock_transcription()
-            raise
+        # Format similar to OpenAI response for compatibility
+        formatted_segments = []
+        full_text = ""
 
-    def _mock_transcription(self):
-        """Returns a dummy transcription structure for testing."""
+        for segment in segment_list:
+            full_text += segment.text + " "
+            formatted_segments.append({
+                'start': segment.start,
+                'end': segment.end,
+                'text': segment.text.strip()
+            })
+
         return {
-            'text': "This is a dummy transcript for testing purposes. It simulates a video content about AI.",
-            'language': "english",
-            'segments': [
-                {'start': 0.0, 'end': 2.0, 'text': "This is a dummy"},
-                {'start': 2.0, 'end': 4.0, 'text': "transcript for testing"},
-                {'start': 4.0, 'end': 6.0, 'text': "purposes."},
-                {'start': 6.0, 'end': 8.0, 'text': "It simulates a video"},
-                {'start': 8.0, 'end': 10.0, 'text': "content about AI."}
-            ],
-            'words': [
-                {'word': "This", 'start': 0.0, 'end': 0.5},
-                {'word': "is", 'start': 0.5, 'end': 1.0},
-                {'word': "a", 'start': 1.0, 'end': 1.5},
-                {'word': "dummy", 'start': 1.5, 'end': 2.0},
-                # ... simplified
-            ]
+            'text': full_text.strip(),
+            'segments': formatted_segments,
+            'language': info.language
         }
