@@ -1,0 +1,63 @@
+# Klipto - Python Backend Requirements
+# Last updated: December 2024
+
+# ============================================
+# Core Framework
+# ============================================
+fastapi>=0.115.0
+uvicorn[standard]>=0.32.0
+python-dotenv>=1.0.0
+pydantic>=2.10.0
+python-multipart>=0.0.18
+
+# ============================================
+# Task Queue & Background Processing
+# ============================================
+celery>=5.4.0
+redis>=5.2.0
+flower>=2.0.0  # Celery monitoring (optional)
+
+# ============================================
+# AI / Machine Learning
+# ============================================
+# Transcription - Faster Whisper (CTranslate2)
+faster-whisper>=1.1.0
+ctranslate2>=4.5.0
+
+# Vision / Object Detection - YOLO
+ultralytics>=8.3.0
+# Note: For latest YOLO11, ultralytics includes all YOLO versions
+
+# Scene Detection
+scenedetect[opencv]>=0.6.5
+
+# LLM Integration - OpenAI SDK (works with OpenRouter, OpenAI, etc.)
+openai>=1.58.0
+
+# ============================================
+# Video & Audio Processing
+# ============================================
+ffmpeg-python>=0.2.0
+opencv-python>=4.10.0
+numpy>=1.26.0
+Pillow>=10.4.0
+
+# ============================================
+# HTTP & Networking
+# ============================================
+httpx>=0.28.0
+aiofiles>=24.1.0
+
+# ============================================
+# Utilities
+# ============================================
+tqdm>=4.67.0
+click>=8.1.0
+
+# ============================================
+# Development & Testing (optional)
+# ============================================
+# pytest>=8.3.0
+# pytest-asyncio>=0.24.0
+# black>=24.10.0
+# ruff>=0.8.0
