@@ -1,0 +1,18 @@
+# ═══════════════════════════════════════════════════════════════
+# KLIPTO - Dipendenze Python
+# ═══════════════════════════════════════════════════════════════
+
+# Core
+yt-dlp>=2024.1.0
+httpx>=0.25.0
+python-dotenv>=1.0.0
+openai>=1.0.0
+colorama>=0.4.6
+
+# Audio analysis (precision cutting)
+librosa>=0.10.0
+scipy>=1.11.0
+numpy>=1.24.0
+
+# VAD (opzionale, per validazione avanzata)
+webrtcvad>=2.0.10
