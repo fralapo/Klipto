@@ -1,4 +1,4 @@
-# ✂️ Klipto - AI YouTube Shorts Generator (v4.0 Production Ready)
+# ✂️ Klipto - AI YouTube Shorts Generator 
 
 **Genera automaticamente clip virali da video lunghi per TikTok, YouTube Shorts e Instagram Reels.**
 
@@ -6,7 +6,7 @@
 
 ---
 
-## ✨ Nuove Funzionalità (v4.0)
+## ✨ Nuove Funzionalità
 
 ### 🏭 Production Pipeline (`src/pipeline.py`)
 Uno script unificato e robusto per l'uso in produzione:
@@ -25,7 +25,7 @@ Uno script unificato e robusto per l'uso in produzione:
 - **Anteprima Console**: Visualizza le clip proposte e le scene rilevate senza generare video.
 - **Modifica Live**: Modifica, aggiungi o rimuovi clip direttamente dalla riga di comando prima del rendering.
 
-### 🧠 Intelligenza TOON v3.0
+### 🧠 TOON
 - **Multi-Agent System**: 4 fasi (Scene Detect -> Classify -> Clip Select -> Supervise).
 - **Efficienza Token**: Risparmio del 70%+ sui costi LLM grazie al formato TOON Tabular ottimizzato.
 - **Micro-Allineamento**: Tagli precisi guidati dai timestamp delle parole.
@@ -110,3 +110,4 @@ MIT License - vedi [LICENSE](LICENSE)
 <p align="center">
   Made with ❤️ for content creators
 </p>
+
